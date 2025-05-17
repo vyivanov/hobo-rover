@@ -27,6 +27,9 @@ target_compile_options(${PROJECT_NAME} PRIVATE
   -ffunction-sections
   -fdata-sections)
 
+target_link_libraries(${PROJECT_NAME} PRIVATE
+  c++std)
+
 add_custom_target(
   ihex
   COMMAND ${CROSS_OBJCOPY} -j .text -j .data -O ihex ${PROJECT_NAME}
