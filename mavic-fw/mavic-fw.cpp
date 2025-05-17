@@ -1,5 +1,8 @@
+#include "inc/port-beacon.hpp"
+
 int main() {
   while (true) {
-    (void)0;
+    auto beacon = mavic::PortBeacon{};
+    auto moved  = static_cast<mavic::PortBeacon&&>(beacon);
   }
 }
