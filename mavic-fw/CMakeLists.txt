@@ -31,6 +31,9 @@ target_compile_options(${PROJECT_NAME} PRIVATE
   -Werror
   -Wpedantic)
 
+target_link_libraries(${PROJECT_NAME} PRIVATE
+  stdcpp)
+
 target_link_options(${PROJECT_NAME} PRIVATE
   -mmcu=${MCU_PART_NUMBER}
   -Wl,--trace)
