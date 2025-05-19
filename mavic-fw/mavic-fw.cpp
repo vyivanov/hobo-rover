@@ -1,5 +1,8 @@
+#include "inc/led-beacon.hpp"
+
 int main() {
   while (true) {
-    (void)0;
+    auto beacon = mavic::LedBeacon{};
+    auto moved  = static_cast<mavic::LedBeacon&&>(beacon);
   }
 }
