@@ -6,7 +6,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS YES)
 project(mavic-fw LANGUAGES CXX DESCRIPTION "Mecanum AVR I2C Controller (mavic)")
 add_executable(${PROJECT_NAME}
   mavic-fw.cpp
-  src/led-beacon.cpp)
+  src/led-beacon.cpp
+  src/uart-stdio.cpp)
 
 set(MCU_PART_NUMBER atmega328pb CACHE STRING "Type of MCU to generate firmware for")
 set(MCU_FREQ_MHZ 16 CACHE STRING "Target frequency the MCU is running on")
