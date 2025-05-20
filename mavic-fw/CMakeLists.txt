@@ -20,7 +20,9 @@ message(STATUS "MCU_BOOTLOADER_PORT - ${MCU_BOOTLOADER_PORT}")
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 target_compile_definitions(${PROJECT_NAME} PRIVATE
-  -DF_CPU=${MCU_FREQ_MHZ}*1e6)
+  -DF_CPU=${MCU_FREQ_MHZ}*1e6
+  -DMCU_PART_NUMBER="${MCU_PART_NUMBER}"
+  -DMCU_FREQ_MHZ=${MCU_FREQ_MHZ})
 
 target_compile_options(${PROJECT_NAME} PRIVATE
   -mmcu=${MCU_PART_NUMBER}

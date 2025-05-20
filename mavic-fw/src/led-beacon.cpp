@@ -1,4 +1,5 @@
 #include "inc/led-beacon.hpp"
+#include "inc/mavic-utils.hpp"
 
 #include <avr/io.h>
 #include <avr/sfr_defs.h>
@@ -71,3 +72,5 @@ auto sleep_for(const Milliseconds milliseconds) noexcept -> void {
 }
 
 } // namespace
+
+static_assert(is_supported_mcu(), "Verify special function registers");
