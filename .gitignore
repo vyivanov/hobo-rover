@@ -1,3 +1,6 @@
+.cache/
+build/
+
 # These files are managed by devcontainer submodule:
 .clang-format
 .clang-tidy
