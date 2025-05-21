@@ -29,6 +29,8 @@ target_compile_options(${PROJECT_NAME} PRIVATE
   -mmcu=${MCU_PART_NUMBER}
   -std=c++20
   -O3
+  -fno-exceptions
+  -fno-rtti
   -Wall
   -Wextra
   -Werror
