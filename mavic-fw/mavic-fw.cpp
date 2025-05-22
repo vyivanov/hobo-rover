@@ -27,11 +27,14 @@ int main() {
 using LedBeaconProc   = OS::process<OS::pr0, 64, OS::pssRunning>;
 const auto led_beacon = LedBeaconProc{"led-beacon"};
 
+void sleep_cb(const mavic::LedBeacon::SleepMs& sleep_ms) noexcept {
+  OS::sleep(sleep_ms.count());
+}
+
 template <>
 OS_PROCESS void LedBeaconProc::exec() {
   while (true) {
-    // TODO: Add callback with call to OS:sleep() service.
-    auto beacon = mavic::LedBeacon{};
+    auto beacon = mavic::LedBeacon{sleep_cb};
     auto moved  = std::move(beacon);
   }
 }
