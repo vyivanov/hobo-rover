@@ -6,10 +6,16 @@
 #include <util/delay.h>
 
 #include <chrono>
+#include <type_traits>
 
 namespace {
 
 using Milliseconds = std::chrono::duration<double, std::milli>;
+
+using SleepMs = mavic::LedBeacon::SleepMs;
+using SleepCb = mavic::LedBeacon::SleepCb;
+
+static_assert(std::is_same_v<Milliseconds, SleepMs>);
 
 constexpr auto BEACON_PERIOD_SEC = 1.5;
 constexpr auto BEACON_PIN_MASK   = _BV(PORTB5);
@@ -18,34 +24,34 @@ constexpr auto BEACON_PERIOD_MS = Milliseconds{BEACON_PERIOD_SEC * 1e3};
 constexpr auto HI_PERIOD_MS     = Milliseconds{25.0};
 constexpr auto LO_PERIOD_MS     = BEACON_PERIOD_MS - HI_PERIOD_MS;
 
-inline auto pin_initialize() noexcept -> void;
-inline auto pin_set_hi(Milliseconds delay_ms) noexcept -> void;
-inline auto pin_set_lo(Milliseconds delay_ms) noexcept -> void;
-
-inline auto sleep_for(Milliseconds milliseconds) noexcept -> void;
+inline void pin_initialize() noexcept;
+inline void pin_set_hi(const SleepMs& sleep_ms, const SleepCb& sleep_cb) noexcept;
+inline void pin_set_lo(const SleepMs& sleep_ms, const SleepCb& sleep_cb) noexcept;
 
 } // namespace
 
 namespace mavic {
 
-LedBeacon::LedBeacon() noexcept {
+LedBeacon::LedBeacon(SleepCb sleep_cb) noexcept : m_sleep_cb{sleep_cb} {
   pin_initialize();
-  pin_set_hi(HI_PERIOD_MS);
+  pin_set_hi(HI_PERIOD_MS, m_sleep_cb);
 }
 
 LedBeacon::~LedBeacon() noexcept {
-  if (m_is_moved) {
+  if (not m_sleep_cb) {
     return;
   }
-  pin_set_lo(LO_PERIOD_MS);
+  pin_set_lo(LO_PERIOD_MS, m_sleep_cb);
 }
 
-LedBeacon::LedBeacon(LedBeacon&& other) noexcept {
-  other.m_is_moved = true;
+LedBeacon::LedBeacon(LedBeacon&& other) noexcept : m_sleep_cb(other.m_sleep_cb) {
+  other.m_sleep_cb = nullptr;
 }
 
 LedBeacon& LedBeacon::operator=(LedBeacon&& rhs) noexcept {
-  rhs.m_is_moved = true;
+  m_sleep_cb     = rhs.m_sleep_cb;
+  rhs.m_sleep_cb = nullptr;
+
   return (*this);
 }
 
@@ -53,22 +59,18 @@ LedBeacon& LedBeacon::operator=(LedBeacon&& rhs) noexcept {
 
 namespace {
 
-auto pin_initialize() noexcept -> void {
+void pin_initialize() noexcept {
   DDRB |= BEACON_PIN_MASK;
 }
 
-auto pin_set_hi(const Milliseconds delay_ms) noexcept -> void {
+void pin_set_hi(const SleepMs& sleep_ms, const SleepCb& sleep_cb) noexcept {
   PORTB |= BEACON_PIN_MASK;
-  sleep_for(delay_ms);
+  sleep_cb(sleep_ms);
 }
 
-auto pin_set_lo(const Milliseconds delay_ms) noexcept -> void {
+void pin_set_lo(const SleepMs& sleep_ms, const SleepCb& sleep_cb) noexcept {
   PORTB &= (~BEACON_PIN_MASK);
-  sleep_for(delay_ms);
-}
-
-auto sleep_for(const Milliseconds milliseconds) noexcept -> void {
-  _delay_ms(milliseconds.count());
+  sleep_cb(sleep_ms);
 }
 
 } // namespace

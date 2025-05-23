@@ -2,6 +2,8 @@
 
 #include <avr/pgmspace.h>
 
+#include <scmRTOS.h>
+
 #include <cstdint>
 #include <cstdio>
 
@@ -25,10 +27,19 @@ enum struct Baudrate : uint8_t {
  *
  * @param [in] baud_rate Communication speed in baud.
  */
-auto initialize_uart_stdio(Baudrate baud_rate) noexcept -> void;
+void initialize_uart_stdio(Baudrate baud_rate) noexcept;
+
+/**
+ * @brief Synchronization primitive to protect concurrent access to hardware.
+ */
+inline OS::TMutex uart_mtx;
 
 /**
  * @def MAVIC_LOG(fmt, ...)
  *      Send formatted string @a fmt to hardware.
  */
-#define MAVIC_LOG(fmt, ...) printf_P(PSTR(fmt "\n"), ##__VA_ARGS__)
+#define MAVIC_LOG(fmt, ...)                                                       \
+  {                                                                               \
+    auto raii = OS::TScopedLock{uart_mtx};                                        \
+    printf_P(PSTR("[%010lu]\x20" fmt "\n"), OS::get_tick_count(), ##__VA_ARGS__); \
+  }

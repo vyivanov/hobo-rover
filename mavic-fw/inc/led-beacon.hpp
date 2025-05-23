@@ -1,5 +1,7 @@
 #pragma once
 
+#include <chrono>
+
 namespace mavic {
 
 /**
@@ -8,10 +10,15 @@ namespace mavic {
 class LedBeacon final {
   public:
 
+  using SleepMs = std::chrono::duration<double, std::milli>;
+  using SleepCb = void (*)(const SleepMs&);
+
   /**
    * @brief Turn on a LED with hardcoded delay A.
+   *
+   * @param sleep_cb Actual sleep functionality.
    */
-  LedBeacon() noexcept;
+  explicit LedBeacon(SleepCb sleep_cb) noexcept;
 
   /**
    * @brief Turn off a LED with hardcoded delay B.
@@ -26,7 +33,7 @@ class LedBeacon final {
 
   private:
 
-  bool m_is_moved{false};
+  SleepCb m_sleep_cb;
 };
 
 } // namespace mavic

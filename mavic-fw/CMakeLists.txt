@@ -7,13 +7,17 @@ project(mavic-fw LANGUAGES CXX DESCRIPTION "Mecanum AVR I2C Controller (mavic)")
 add_executable(${PROJECT_NAME}
   mavic-fw.cpp
   src/led-beacon.cpp
-  src/uart-stdio.cpp)
+  src/uart-stdio.cpp
+  src/os-config/start-os.cpp
+  src/os-processes/dummy-print-proc.cpp
+  src/os-processes/led-beacon-proc.cpp)
 
 set(MCU_PART_NUMBER atmega328pb CACHE STRING "Type of MCU to generate firmware for")
 set(MCU_FREQ_MHZ 16 CACHE STRING "Target frequency the MCU is running on")
 set(MCU_BOOTLOADER_PORT /dev/ttyUSB0 CACHE STRING "Serial port the MCU is connected to")
 
 add_subdirectory(3rd-party)
+target_include_directories(scmrtos PUBLIC inc/os-config/)
 
 message(STATUS "MCU_PART_NUMBER     - ${MCU_PART_NUMBER}")
 message(STATUS "MCU_FREQ_MHZ        - ${MCU_FREQ_MHZ}")
@@ -29,12 +33,16 @@ target_compile_options(${PROJECT_NAME} PRIVATE
   -mmcu=${MCU_PART_NUMBER}
   -std=c++20
   -O3
+  -fno-exceptions
+  -fno-rtti
   -Wall
   -Wextra
   -Werror
-  -Wpedantic)
+  -Wpedantic
+  -Wno-volatile)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
+  scmrtos
   stdcpp)
 
 target_link_options(${PROJECT_NAME} PRIVATE
