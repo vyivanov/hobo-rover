@@ -14,24 +14,24 @@ constexpr auto STATUS_SUCCESS = static_cast<int>(0);
 constexpr auto WORD_MASK_LO_BYTE = static_cast<uint16_t>(0x00FF);
 constexpr auto WORD_MASK_HI_BYTE = static_cast<uint16_t>(0xFF00);
 
-auto initialize_uart(Baudrate baud_rate) noexcept -> void;
-auto initialize_stdio() noexcept -> void;
+void initialize_uart(Baudrate baud_rate) noexcept;
+void initialize_stdio() noexcept;
 
-auto uart_putchar(char symbol, FILE* stream) -> int;
-auto uart_getchar(FILE* stream) -> int;
+int uart_putchar(char symbol, FILE* stream);
+int uart_getchar(FILE* stream);
 
-auto to_number(Baudrate baudrate) noexcept -> uint32_t;
+uint32_t to_number(Baudrate baudrate) noexcept;
 
 } // namespace
 
-auto initialize_uart_stdio(const Baudrate baud_rate) noexcept -> void {
+void initialize_uart_stdio(const Baudrate baud_rate) noexcept {
   initialize_uart(baud_rate);
   initialize_stdio();
 }
 
 namespace {
 
-auto initialize_uart(const Baudrate baud_rate) noexcept -> void {
+void initialize_uart(const Baudrate baud_rate) noexcept {
   const uint16_t baud_prescale = F_CPU / 16 / to_number(baud_rate) - 1;
 
   UBRR0L = (baud_prescale & WORD_MASK_LO_BYTE) >> 0;
@@ -41,7 +41,7 @@ auto initialize_uart(const Baudrate baud_rate) noexcept -> void {
   UCSR0C = _BV(UCSZ01) | _BV(UCSZ00);
 }
 
-auto initialize_stdio() noexcept -> void {
+void initialize_stdio() noexcept {
   static FILE uart_stdin  = FDEV_SETUP_STREAM(nullptr, uart_getchar, _FDEV_SETUP_READ);
   static FILE uart_stdout = FDEV_SETUP_STREAM(uart_putchar, nullptr, _FDEV_SETUP_WRITE);
 
@@ -51,7 +51,7 @@ auto initialize_stdio() noexcept -> void {
   stderr = &uart_stdout;
 }
 
-auto uart_putchar(const char symbol, FILE* const stream) -> int {
+int uart_putchar(const char symbol, FILE* const stream) {
   (void)stream;
 
   if (symbol == '\n') {
@@ -64,14 +64,14 @@ auto uart_putchar(const char symbol, FILE* const stream) -> int {
   return STATUS_SUCCESS;
 }
 
-auto uart_getchar(FILE* const stream) -> int {
+int uart_getchar(FILE* const stream) {
   (void)stream;
 
   // TODO: Implement reading from hardware.
   return 'x';
 }
 
-auto to_number(const Baudrate baudrate) noexcept -> uint32_t {
+uint32_t to_number(const Baudrate baudrate) noexcept {
   auto number = uint32_t{9600UL};
 
   switch (baudrate) {

@@ -25,7 +25,7 @@ enum struct Baudrate : uint8_t {
  *
  * @param [in] baud_rate Communication speed in baud.
  */
-auto initialize_uart_stdio(Baudrate baud_rate) noexcept -> void;
+void initialize_uart_stdio(Baudrate baud_rate) noexcept;
 
 /**
  * @def MAVIC_LOG(fmt, ...)
