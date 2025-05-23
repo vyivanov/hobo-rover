@@ -12,7 +12,7 @@ using tick_count_t = uint_fast32_t;
 
 #define scmRTOS_SYSTEM_TICKS_ENABLE               (0)
 #define scmRTOS_SYSTEM_TICKS_ATOMIC               (0)
-#define scmRTOS_SYSTIMER_HOOK_ENABLE              (0)
+#define scmRTOS_SYSTIMER_HOOK_ENABLE              (1)
 #define scmRTOS_SYSTIMER_NEST_INTS_ENABLE         (0)
 
 #define scmRTOS_CONTEXT_SWITCH_SCHEME             (0)

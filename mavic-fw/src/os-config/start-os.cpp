@@ -28,3 +28,12 @@ void start_system_timer() noexcept {
 }
 
 } // namespace
+
+namespace OS {
+
+void system_timer_user_hook() {
+  DDRD  |= _BV(DDRD2);
+  PORTD ^= _BV(PORTD2);
+}
+
+} // namespace OS
