@@ -6,7 +6,7 @@ using timeout_t    = uint16_t;
 using tick_count_t = uint_fast32_t;
 #endif
 
-#define scmRTOS_PROCESS_COUNT                     (1)
+#define scmRTOS_PROCESS_COUNT                     (2)
 #define scmRTOS_PROCESS_RESTART_ENABLE            (0)
 #define scmRTOS_SUSPENDED_PROCESS_ENABLE          (0)
 
@@ -25,6 +25,6 @@ using tick_count_t = uint_fast32_t;
 #define scmRTOS_USER_DEFINED_STACK_PATTERN        (0xaaU)
 
 #define scmRTOS_PRIORITY_ORDER                    (0)
-#define scmRTOS_DEBUG_ENABLE                      (0)
+#define scmRTOS_DEBUG_ENABLE                      (1)
 
 #define scmRTOS_ISRW_TYPE                         TISRW

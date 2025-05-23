@@ -9,6 +9,7 @@ add_executable(${PROJECT_NAME}
   src/led-beacon.cpp
   src/uart-stdio.cpp
   src/os-config/start-os.cpp
+  src/os-processes/dummy-print-proc.cpp
   src/os-processes/led-beacon-proc.cpp)
 
 set(MCU_PART_NUMBER atmega328pb CACHE STRING "Type of MCU to generate firmware for")
