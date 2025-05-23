@@ -1,9 +1,7 @@
 #include "inc/led-beacon.hpp"
 #include "inc/mavic-constants.hpp"
+#include "inc/os-config/start-os.hpp"
 #include "inc/uart-stdio.hpp"
-
-#include <avr/io.h>
-#include <avr/sfr_defs.h>
 
 #include <scmRTOS.h>
 
@@ -15,11 +13,7 @@ int main() {
   MAVIC_LOG(MAVIC_LOGO);
   MAVIC_LOG("mavic initialized");
 
-  // TODO: [begin] Move to separate translation unit.
-  TIMER0_CS_REG |= _BV(CS01) | _BV(CS00);
-  TIMER0_IE_REG |= _BV(TOIE0);
-  OS::run();
-  // TODO: [ end ]
+  start_os();
 }
 
 // TODO: Move to separate translation unit.
