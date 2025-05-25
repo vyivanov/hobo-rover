@@ -7,7 +7,7 @@
  *
  * @return 'true' if yes, 'false' otherwise.
  */
-consteval auto is_supported_mcu() -> bool {
+consteval bool is_supported_mcu() {
   using namespace std::string_view_literals;
 
   return ("atmega328pb"sv == MCU_PART_NUMBER);
@@ -18,6 +18,6 @@ consteval auto is_supported_mcu() -> bool {
  *
  * @return 'true' if yes, 'false' otherwise.
  */
-consteval auto is_supported_freq() -> bool {
+consteval bool is_supported_freq() {
   return (16 == MCU_FREQ_MHZ);
 }
