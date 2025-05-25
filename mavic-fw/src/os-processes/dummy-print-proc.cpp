@@ -15,7 +15,7 @@ const auto dummy_print = DummyPrintProc{"dummy-print"};
 template <>
 OS_PROCESS void DummyPrintProc::exec() {
   const char* proc_name = OS::get_proc(OS::pr1)->name();
-  const auto proc_sleep = std::chrono::milliseconds{250};
+  const auto proc_sleep = std::chrono::milliseconds{50};
   auto proc_count       = uint32_t{0};
 
   while (true) {
